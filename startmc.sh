@@ -103,8 +103,15 @@ fi
 #Plugin installation
 rm -f ./plugins/*.jar
 
-plugin_ids="${MODRINTH_PROJECTS:-$PROJECT_ID}"
+#Cusom plugins
+for plugin in /docker/custom_plugins/*.jar; do
+    [ -f "$plugin" ] || continue
+    echo "Copying custom plugin: $(basename "$plugin")"
+    cp "$plugin" ./plugins/
+done
 
+#Modrinth plugins
+plugin_ids="${MODRINTH_PROJECTS:-$PROJECT_ID}"
 if [ -n "$plugin_ids" ]; then
     IFS=',' read -r -a ids <<< "$plugin_ids"
     for project_id in "${ids[@]}"; do
